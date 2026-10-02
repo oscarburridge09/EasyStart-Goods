@@ -1,1 +1,26 @@
-const cart=[];const drawer=document.getElementById('drawer'),overlay=document.getElementById('overlay'),items=document.getElementById('items'),count=document.getElementById('count'),total=document.getElementById('total');const money=n=>'£'+n.toFixed(2);function render(){count.textContent=cart.reduce((s,x)=>s+x.qty,0);total.textContent=money(cart.reduce((s,x)=>s+x.price*x.qty,0));if(!cart.length){items.innerHTML='<p>Your basket is empty.</p>';return}items.innerHTML=cart.map((x,i)=>`<div class="item"><div><b>${x.name}</b><small>${x.qty} × ${money(x.price)}</small></div><button class="remove" data-i="${i}">Remove</button></div>`).join('');document.querySelectorAll('.remove').forEach(b=>b.onclick=()=>{cart.splice(+b.dataset.i,1);render()})}function openBasket(){drawer.classList.add('open');overlay.classList.add('show')}function closeBasket(){drawer.classList.remove('open');overlay.classList.remove('show')}document.querySelectorAll('.add').forEach(b=>b.onclick=()=>{let x=cart.find(x=>x.name===b.dataset.name);x?x.qty++:cart.push({name:b.dataset.name,price:+b.dataset.price,qty:1});render();openBasket()});document.getElementById('basketBtn').onclick=openBasket;document.getElementById('close').onclick=closeBasket;overlay.onclick=closeBasket;document.getElementById('checkout').onclick=()=>alert(cart.length?'Demo checkout: connect Stripe, PayPal or another payment provider to accept live orders.':'Your basket is empty.');render();
+const cart=[];
+const drawer=document.getElementById('drawer');
+const overlay=document.getElementById('overlay');
+const items=document.getElementById('items');
+const count=document.getElementById('count');
+const total=document.getElementById('total');
+const money=n=>'£'+n.toFixed(2);
+function render(){
+  count.textContent=cart.reduce((s,x)=>s+x.qty,0);
+  total.textContent=money(cart.reduce((s,x)=>s+x.price*x.qty,0));
+  if(!cart.length){items.innerHTML='<p>Your basket is empty.</p>';return}
+  items.innerHTML=cart.map((x,i)=>`<div class="item"><div><b>${x.name}</b><small>${x.qty} × ${money(x.price)}</small></div><button class="remove" data-i="${i}">Remove</button></div>`).join('');
+  document.querySelectorAll('.remove').forEach(b=>b.onclick=()=>{cart.splice(+b.dataset.i,1);render()});
+}
+function openBasket(){drawer.classList.add('open');overlay.classList.add('show')}
+function closeBasket(){drawer.classList.remove('open');overlay.classList.remove('show')}
+document.querySelectorAll('.add').forEach(b=>b.onclick=()=>{
+  let x=cart.find(x=>x.name===b.dataset.name);
+  x?x.qty++:cart.push({name:b.dataset.name,price:+b.dataset.price,qty:1});
+  render();openBasket();
+});
+document.getElementById('basketBtn').onclick=openBasket;
+document.getElementById('close').onclick=closeBasket;
+overlay.onclick=closeBasket;
+document.getElementById('checkout').onclick=()=>alert(cart.length?'Demo checkout: connect Stripe, PayPal or another payment provider to accept live orders.':'Your basket is empty.');
+render();
